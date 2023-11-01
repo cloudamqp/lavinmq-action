@@ -25,3 +25,6 @@ runs:
 
     - run: sudo systemctl start lavinmq.service
       shell: bash
+
+    - run: echo "${{ inputs.env-key }}=amqp://guest:guest@localhost" >> $GITHUB_ENV
+      shell: bash
