@@ -23,3 +23,4 @@ jobs:
     - uses: ./
     - run: lavinmq --version
     - run: systemctl is-active lavinmq.service
+    - run: echo $AMQP_URL
