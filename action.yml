@@ -1,0 +1,27 @@
+name: "LavinMQ in GitHub Actions VM"
+description: "Start LavinMQ in the GitHub Actions VM"
+branding:
+  icon: "save"
+  color: "orange"
+inputs:
+  env-key:
+    description: "Name of the environment variable with the LavinMQ URL"
+    required: false
+    default: "AMQP_URL"
+runs:
+  using: "composite"
+  steps:
+    - run: curl -L https://packagecloud.io/cloudamqp/lavinmq/gpgkey | sudo apt-key add -
+      shell: bash
+
+    - run: echo "deb https://packagecloud.io/cloudamqp/lavinmq/ubuntu/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/lavinmq.list
+      shell: bash
+
+    - run: sudo apt-get update
+      shell: bash
+
+    - run: sudo apt install lavinmq
+      shell: bash
+
+    - run: sudo systemctl start lavinmq.service
+      shell: bash
