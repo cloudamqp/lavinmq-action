@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: cloudamqp/lavinmq@v1
+    - uses: cloudamqp/lavinmq@main
     - run: <your test command>
 ```
 
