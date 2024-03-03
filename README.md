@@ -12,5 +12,3 @@ jobs:
 ```
 
 [composite run steps action]: https://docs.github.com/en/free-pro-team@latest/actions/creating-actions/creating-a-composite-run-steps-action
-
-See the [GitHub Actions Virtual Environments](https://github.com/actions/virtual-environments/#available-environments) repo to understand what version of LavinMQ will be used.
