@@ -8,6 +8,10 @@ inputs:
     description: "Name of the environment variable with the LavinMQ URL"
     required: false
     default: "AMQP_URL"
+  version:
+    description: "The version of LavinMQ to install"
+    required: false
+    default: "latest"
 runs:
   using: "composite"
   steps:
@@ -20,7 +24,14 @@ runs:
     - run: sudo apt-get update
       shell: bash
 
-    - run: sudo apt install lavinmq
+    - name: "Install LavinMQ (${{ inputs.version }})"
+      run: |
+        if test "${{ inputs.version }}" = "latest";
+        then
+          sudo apt-get install lavinmq
+        else
+          sudo apt-get install "lavinmq=${{ inputs.version }}-1"
+        fi
       shell: bash
 
     - run: sudo systemctl start lavinmq.service

@@ -15,12 +15,17 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-20.04, ubuntu-22.04 ]
+        version: [ latest ]
+        include:
+          - { os: ubuntu-24.04, version: '1.3.1' }
 
-    name: ${{ matrix.os }}
+    name: ${{ matrix.os }} (${{ matrix.version }})
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
     - uses: ./
+      with:
+        version: ${{ matrix.version }}
     - run: lavinmq --version
     - run: systemctl is-active lavinmq.service
     - run: echo $AMQP_URL
