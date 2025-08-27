@@ -21,6 +21,12 @@ runs:
     - run: echo "deb https://packagecloud.io/cloudamqp/lavinmq/ubuntu/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/lavinmq.list
       shell: bash
 
+    - name: Configure dpkg to skip building man pages
+      run: |
+        echo 'path-exclude /usr/share/doc/*' | sudo tee -a /etc/dpkg/dpkg.cfg.d/01_nodoc
+        echo 'path-exclude /usr/share/man/*' | sudo tee -a /etc/dpkg/dpkg.cfg.d/01_nodoc
+      shell: bash
+
     - run: sudo apt-get update
       shell: bash
 
