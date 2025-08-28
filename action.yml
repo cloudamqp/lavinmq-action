@@ -1,4 +1,4 @@
-name: "LavinMQ in GitHub Actions VM"
+name: "LavinMQ"
 description: "Start LavinMQ in the GitHub Actions VM"
 branding:
   icon: "save"
