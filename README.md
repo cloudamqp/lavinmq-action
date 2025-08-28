@@ -1,6 +1,6 @@
 # LavinMQ action
 
-`cloudamqp/lavinmq-action` is a [composite run steps action] that starts LavinMQ in the GitHub Actions VM with the default guest/guest user/password. You can then connect to the broker using the address found in environment variable `AMQP_URL`.
+`cloudamqp/lavinmq-action` is a [composite run steps action] that starts [LavinMQ](https://lavinmq.com/) in the GitHub Actions VM with the default guest/guest user/password. You can then connect to the broker using the address found in environment variable `AMQP_URL`.
 
 This action is stable, so you can use `cloudamqp/lavinmq-action@main` to always get the latest updates.
 
