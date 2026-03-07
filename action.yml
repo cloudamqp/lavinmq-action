@@ -12,10 +12,14 @@ inputs:
     description: "The version of LavinMQ to install"
     required: false
     default: "latest"
+  vhost:
+    description: "Name of a vhost to create in the broker (included in the AMQP URL)"
+    required: false
+    default: ""
 runs:
   using: "composite"
   steps:
-    - run: curl -L https://packagecloud.io/cloudamqp/lavinmq/gpgkey | sudo apt-key add -
+    - run: curl --location https://packagecloud.io/cloudamqp/lavinmq/gpgkey | sudo apt-key add -
       shell: bash
 
     - run: echo "deb https://packagecloud.io/cloudamqp/lavinmq/ubuntu/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/lavinmq.list
@@ -43,5 +47,20 @@ runs:
     - run: sudo systemctl start lavinmq.service
       shell: bash
 
-    - run: echo "${{ inputs.env-key }}=amqp://guest:guest@localhost" >> $GITHUB_ENV
+    - name: Create vhost
+      if: inputs.vhost != ''
+      run: |
+        curl --silent --fail --user guest:guest --request PUT "http://localhost:15672/api/vhosts/${{ inputs.vhost }}"
+        curl --silent --fail --user guest:guest --request PUT "http://localhost:15672/api/permissions/${{ inputs.vhost }}/guest" \
+          --header 'Content-Type: application/json' \
+          --data '{"configure":".*","write":".*","read":".*"}'
+      shell: bash
+
+    - name: Set AMQP URL
+      run: |
+        if test -n "${{ inputs.vhost }}"; then
+          echo "${{ inputs.env-key }}=amqp://guest:guest@localhost/${{ inputs.vhost }}" >> $GITHUB_ENV
+        else
+          echo "${{ inputs.env-key }}=amqp://guest:guest@localhost" >> $GITHUB_ENV
+        fi
       shell: bash
