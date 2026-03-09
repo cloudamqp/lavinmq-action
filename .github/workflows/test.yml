@@ -25,10 +25,34 @@ jobs:
     name: ${{ matrix.os }} (${{ matrix.version }})
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: ./
       with:
         version: ${{ matrix.version }}
     - run: lavinmq --version
     - run: systemctl is-active lavinmq.service
     - run: echo $AMQP_URL
+
+  test-vhost:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+
+    name: vhost (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v6
+    - uses: ./
+      with:
+        vhost: test-vhost
+    - run: lavinmq --version
+    - run: systemctl is-active lavinmq.service
+    - name: Verify AMQP_URL contains vhost
+      run: |
+        echo "$AMQP_URL"
+        test "$AMQP_URL" = "amqp://guest:guest@localhost/test-vhost"
+    - name: Verify vhost exists in broker
+      run: |
+        curl --silent --fail --user guest:guest http://localhost:15672/api/vhosts/test-vhost

@@ -13,7 +13,7 @@ jobs:
     - run: <your test command>
 ```
 
-You can customize the environment variable name and the LavinMQ version used:
+You can customize the environment variable name, the LavinMQ version, and optionally create a vhost:
 
 ```yaml
 jobs:
@@ -23,8 +23,15 @@ jobs:
     - uses: cloudamqp/lavinmq-action@v1
       with:
         env-key: LAVINMQ_URL
-        version: 2.4.1
+        version: 2.6.9
+        vhost: my-vhost
     - run: <your test command>
 ```
+
+| Input | Description | Default |
+|-------|-------------|---------|
+| `env-key` | Name of the environment variable with the LavinMQ URL | `AMQP_URL` |
+| `version` | The version of LavinMQ to install | `latest` |
+| `vhost` | Name of a vhost to create in the broker (included in the AMQP URL) | _(none)_ |
 
 [composite run steps action]: https://docs.github.com/en/free-pro-team@latest/actions/creating-actions/creating-a-composite-run-steps-action
