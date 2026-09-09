@@ -31,7 +31,13 @@ runs:
         echo 'path-exclude /usr/share/man/*' | sudo tee -a /etc/dpkg/dpkg.cfg.d/01_nodoc
       shell: bash
 
-    - run: sudo apt-get update
+    # Scope the refresh to our own list: a broken third-party repo on the
+    # runner image (Google Chrome, for one) must not fail LavinMQ setup.
+    - run: |
+        sudo apt-get update \
+          -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/lavinmq.list \
+          -o Dir::Etc::sourceparts=- \
+          -o APT::Get::List-Cleanup=0
       shell: bash
 
     - name: "Install LavinMQ (${{ inputs.version }})"
