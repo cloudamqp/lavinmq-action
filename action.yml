@@ -19,10 +19,17 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: curl --location https://packagecloud.io/cloudamqp/lavinmq/gpgkey | sudo apt-key add -
+    # apt-key is gone as of Ubuntu 26.04; trust the key for our source only.
+    # --fail keeps an HTTP error page from being saved as the key.
+    - name: Add the LavinMQ signing key
+      run: |
+        sudo curl --fail --silent --show-error --location \
+          --retry 5 --retry-all-errors \
+          --output /etc/apt/keyrings/lavinmq.asc \
+          https://packagecloud.io/cloudamqp/lavinmq/gpgkey
       shell: bash
 
-    - run: echo "deb https://packagecloud.io/cloudamqp/lavinmq/ubuntu/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/lavinmq.list
+    - run: echo "deb [signed-by=/etc/apt/keyrings/lavinmq.asc] https://packagecloud.io/cloudamqp/lavinmq/ubuntu/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/lavinmq.list
       shell: bash
 
     - name: Configure dpkg to skip building man pages
